@@ -1,0 +1,16 @@
+build*/
+work/
+dist/
+validation/
+.codex/
+.vs/
+*.user
+*.dll
+*.exe
+*.pdb
+*.lib
+*.obj
+*.log
+*.csv
+.env*
+tests/fixtures/
