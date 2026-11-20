@@ -1,0 +1,206 @@
+[
+  {
+    "name": "zlib",
+    "version": "1.3.1",
+    "revision": "51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf",
+    "upstream": "https://github.com/madler/zlib.git",
+    "download": "https://codeload.github.com/madler/zlib/zip/51b7f2abdade71cd9bb0e7a373ef2610ec6f9daf",
+    "file": "zlib-1.3.1.zip",
+    "sha256": "8be92f276c1280aa4f46a878008c7bf295b6ca8da0eb27b41e3666d894f0d32c",
+    "bytes": 1728531
+  },
+  {
+    "name": "libpng",
+    "version": "1.6.47",
+    "revision": "${PSScriptRoot}/checksums/lpng1647.zip.sha256",
+    "url": "https://sourceforge.net/projects/libpng/files/libpng16/1.6.47/lpng1647.zip",
+    "file": "libpng-1.6.47-upstream-tag.zip",
+    "download": "https://codeload.github.com/pnggroup/libpng/zip/refs/tags/v1.6.47",
+    "note": "Official v1.6.47 tag; archive packaging differs from the CRLF SourceForge ZIP.",
+    "sha256": "d7efc089968972fb79a4ab71bd9311f56c58a51b858a17bab85d806ec48cc77a",
+    "bytes": 1856273
+  },
+  {
+    "name": "opus",
+    "version": "1.5.2",
+    "revision": "ddbe48383984d56acd9e1ab6a090c54ca6b735a6",
+    "upstream": "https://github.com/xiph/opus.git",
+    "download": "https://codeload.github.com/xiph/opus/zip/ddbe48383984d56acd9e1ab6a090c54ca6b735a6",
+    "file": "opus-1.5.2.zip",
+    "sha256": "81a6f094567b3174294db2fa74ac113b4fb3e8aa2b283f89247168668e18cc73",
+    "bytes": 4863670
+  },
+  {
+    "name": "libogg",
+    "version": "1.3.5",
+    "revision": "fa80aae9d50096160f2b56ada35527d7aee3f746",
+    "upstream": "https://github.com/xiph/ogg.git",
+    "download": "https://codeload.github.com/xiph/ogg/zip/fa80aae9d50096160f2b56ada35527d7aee3f746",
+    "file": "libogg-1.3.5.zip",
+    "sha256": "640ef16e7607265a008e9d482893f65462e2f4f96b1c80f6229426cc0c147aa2",
+    "bytes": 322587
+  },
+  {
+    "name": "libvorbis",
+    "version": "1.3.7",
+    "revision": "2eac96b03ff67953354cb0a649c08aa3a23267ef",
+    "upstream": "https://gitlab.xiph.org/xiph/vorbis.git",
+    "download": "https://gitlab.xiph.org/xiph/vorbis/-/archive/2eac96b03ff67953354cb0a649c08aa3a23267ef/libvorbis-2eac96b03ff67953354cb0a649c08aa3a23267ef.tar.gz",
+    "file": "libvorbis-1.3.7.tar.gz",
+    "sha256": "a9323a23ef91e087504152764e3e50a845daf2b469713455689ff6bdc60d3514",
+    "bytes": 1238194
+  },
+  {
+    "name": "libvpx",
+    "version": "1.14.1",
+    "revision": "${PSScriptRoot}/checksums/v1.14.1.zip.sha256",
+    "upstream": "https://github.com/webmproject/libvpx/archive/refs/tags/v1.14.1.zip",
+    "download": "https://github.com/webmproject/libvpx/archive/refs/tags/v1.14.1.zip",
+    "file": "libvpx-1.14.1.zip",
+    "sha256": "f40e4c7e7b4025d18be17a8225f8be2f26b349715399cd36c2de573fe976dfd7",
+    "bytes": 6335358
+  },
+  {
+    "name": "svt-av1",
+    "version": "2.3.0",
+    "revision": "6e69def4ec283fe0b71195671245c3b768bebdef",
+    "upstream": "https://gitlab.com/AOMediaCodec/SVT-AV1.git",
+    "download": "https://gitlab.com/AOMediaCodec/SVT-AV1/-/archive/6e69def4ec283fe0b71195671245c3b768bebdef/svt-av1-6e69def4ec283fe0b71195671245c3b768bebdef.tar.gz",
+    "file": "svt-av1-2.3.0.tar.gz",
+    "sha256": "8c7921e9f44f1dc18d51351fe353e6c86de306cc9e7e159a4d479dfc01456d6d",
+    "bytes": 10844802
+  },
+  {
+    "name": "aom",
+    "version": "3.12.0",
+    "revision": "3b624af45b86646a20b11a9ff803aeae588cdee6",
+    "upstream": "https://aomedia.googlesource.com/aom.git",
+    "download": "https://aomedia.googlesource.com/aom/+archive/3b624af45b86646a20b11a9ff803aeae588cdee6.tar.gz",
+    "file": "aom-3.12.0.tar.gz",
+    "sha256": "d8b8ac2daa38aea37b7d903e0fda9eb50866feefd277dc3363104b4dbdc3c852",
+    "bytes": 5558492
+  },
+  {
+    "name": "gas-preprocessor",
+    "version": "0.0.0",
+    "revision": "9309c67acb535ca6248f092e96131d8eb07eefc1",
+    "upstream": "https://github.com/FFmpeg/gas-preprocessor.git",
+    "download": "https://codeload.github.com/FFmpeg/gas-preprocessor/zip/9309c67acb535ca6248f092e96131d8eb07eefc1",
+    "file": "gas-preprocessor-0.0.0.zip",
+    "sha256": "d87e6f589aa8549e4a8bde8eaba186407ae3dc3448efeec7bbafa8789e81cea1",
+    "bytes": 15138
+  },
+  {
+    "name": "x264",
+    "version": "r3106",
+    "revision": "eaa68fad9e5d201d42fde51665f2d137ae96baf0",
+    "upstream": "https://github.com/mirror/x264.git",
+    "download": "https://codeload.github.com/mirror/x264/zip/eaa68fad9e5d201d42fde51665f2d137ae96baf0",
+    "file": "x264-r3106.zip",
+    "sha256": "98f68a9874ef4ae279e8ed84dcba035766c22ef726c58d427fe1ba8983a9bd84",
+    "bytes": 1111895
+  },
+  {
+    "name": "libtheora",
+    "version": "1.1.1",
+    "revision": "${PSScriptRoot}/checksums/libtheora-1.1.1.zip.sha256",
+    "upstream": "https://ftp.osuosl.org/pub/xiph/releases/theora/libtheora-1.1.1.zip",
+    "download": "https://ftp.osuosl.org/pub/xiph/releases/theora/libtheora-1.1.1.zip",
+    "file": "libtheora-1.1.1.zip",
+    "sha256": "f644fef154f7a80e7258c8baec5c510f594d720835855cddce322b924934ba36",
+    "bytes": 2275495
+  },
+  {
+    "name": "lame",
+    "version": "3.100",
+    "revision": "${PSScriptRoot}/checksums/lame-3.100.tar.gz.win.sha256",
+    "upstream": "https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz",
+    "download": "https://downloads.sourceforge.net/project/lame/lame/3.100/lame-3.100.tar.gz",
+    "file": "lame-3.100.tar.gz",
+    "sha256": "ddfe36cab873794038ae2c1210557ad34857a4b6bdc515785d1da9e175b1da1e",
+    "bytes": 1524133
+  },
+  {
+    "name": "mbedtls",
+    "version": "3.6.4",
+    "revision": "c765c831e5c2a0971410692f92f7a81d6ec65ec2",
+    "upstream": "https://github.com/Mbed-TLS/mbedtls.git",
+    "download": "https://codeload.github.com/Mbed-TLS/mbedtls/zip/c765c831e5c2a0971410692f92f7a81d6ec65ec2",
+    "file": "mbedtls-3.6.4.zip",
+    "sha256": "2b6fec921ebff67ef0980bce2e1bb7684fdde4057a81dc9c5ab97782e8fab6e5",
+    "bytes": 6150018
+  },
+  {
+    "name": "srt",
+    "version": "1.5.2",
+    "revision": "${PSScriptRoot}/checksums/v1.5.2.zip.sha256",
+    "upstream": "https://github.com/Haivision/srt/archive/refs/tags/v1.5.2.zip",
+    "download": "https://github.com/Haivision/srt/archive/refs/tags/v1.5.2.zip",
+    "file": "srt-1.5.2.zip",
+    "sha256": "2686f75533bd53ec917dab6129186b124b4d105eadaa6a84e83719ac3b5ae6bd",
+    "bytes": 1874895
+  },
+  {
+    "name": "libdatachannel",
+    "notLinked": true
+  },
+  {
+    "name": "librist",
+    "version": "0.2.7",
+    "revision": "809390b3b75a259a704079d0fb4d8f1b5f7fa956",
+    "url": "https://code.videolan.org/rist/librist/-/archive/809390b3b75a259a704079d0fb4d8f1b5f7fa956/librist-809390b3b75a259a704079d0fb4d8f1b5f7fa956.tar.gz",
+    "file": "librist-0.2.7-mirror.zip",
+    "download": "https://codeload.github.com/aklofas/librist/zip/809390b3b75a259a704079d0fb4d8f1b5f7fa956",
+    "note": "Unmodified mirror, exact upstream commit. Includes bundled cJSON, mbedTLS and LZ4 sources.",
+    "sha256": "77e85061d0ca525adaad4759cedb83e5401c10cca21184b1be53754276ea1a89",
+    "bytes": 3129180
+  },
+  {
+    "name": "nv-codec-headers",
+    "version": "12.2.72.0",
+    "revision": "c69278340ab1d5559c7d7bf0edf615dc33ddbba7",
+    "upstream": "https://github.com/FFmpeg/nv-codec-headers.git",
+    "download": "https://codeload.github.com/FFmpeg/nv-codec-headers/zip/c69278340ab1d5559c7d7bf0edf615dc33ddbba7",
+    "file": "nv-codec-headers-12.2.72.0.zip",
+    "sha256": "7de19301124affe53e546da0ad449a1c139682b5bf66faa5340d15665bc10541",
+    "bytes": 86195
+  },
+  {
+    "name": "amf",
+    "version": "1.4.36",
+    "revision": "16f7d73e0b45c473e903e46981ed0b91efc4c091",
+    "upstream": "https://github.com/GPUOpen-LibrariesAndSDKs/AMF.git",
+    "download": "https://codeload.github.com/GPUOpen-LibrariesAndSDKs/AMF/zip/16f7d73e0b45c473e903e46981ed0b91efc4c091",
+    "file": "amf-1.4.36-headers.zip",
+    "sha256": "877b624617e0b4217b527af5f49af23846573adcf2ca3ba58662c421e87e71e6",
+    "bytes": 156019,
+    "note": "Headers used by the OBS build recipe; runtime samples and unrelated media omitted."
+  },
+  {
+    "name": "FFmpeg",
+    "version": "7.1.1",
+    "revision": "db69d06eeeab4f46da15030a80d539efb4503ca8",
+    "upstream": "https://github.com/FFmpeg/FFmpeg.git",
+    "download": "https://codeload.github.com/FFmpeg/FFmpeg/zip/db69d06eeeab4f46da15030a80d539efb4503ca8",
+    "file": "FFmpeg-7.1.1.zip",
+    "sha256": "7635012243f9be58a21c194e5007583772b4e3deb476fe122ff3ba3774cb7255",
+    "bytes": 21447279
+  },
+  {
+    "name": "curl",
+    "version": "8.12.1",
+    "revision": "57495c64871d18905a0941db9196ef90bafe9a29",
+    "upstream": "https://github.com/curl/curl.git",
+    "download": "https://codeload.github.com/curl/curl/zip/57495c64871d18905a0941db9196ef90bafe9a29",
+    "file": "curl-8.12.1.zip",
+    "sha256": "fb1f9d844ef020abc99757cb22ba0ad46b83452c3566db0c5f0507b40778e286",
+    "bytes": 6272334
+  },
+  {
+    "name": "mbedtls-framework",
+    "revision": "2a3e2c5ea053c14b745dbdf41f609b1edc6a72fa",
+    "file": "mbedtls-framework-2a3e2c5.zip",
+    "sha256": "9bd5d3cee26f2476bc9989454df99327599c0b5c835c4ebc91007727458164d9",
+    "note": "Extract as framework/ in the mbedTLS source tree."
+  }
+]

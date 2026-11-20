@@ -22,15 +22,19 @@ A native video playlist source for OBS Studio on Windows x64. Build a continuous
 - **Source hotkeys:** assign Play, Pause, Next and Previous in OBS Settings → Hotkeys.
 - **Five languages:** English, Spanish, French, German and Italian, following the OBS language.
 
+## Download
+
+Get the [official 1.0.0 release](https://github.com/Emidj/obs-playlist-nexus/releases/tag/v1.0.0). Download **Windows-x64-Installer.zip**, extract it, close OBS and run the included Setup executable. Licenses and corresponding source downloads are provided with the release.
+
 ## Quick start
 
-1. Build the plugin using the [build guide](docs/BUILDING.md), then install it with its compatible runtime dependencies into your OBS installation.
+1. Download and extract the installer archive, close OBS, run Setup and select your OBS installation folder. For a custom build, use the [build guide](docs/BUILDING.md).
 2. Add an **OBS Playlist NEXUS** source to your scene.
 3. Open its properties and click **Open Playlist Manager**.
 4. Use **Add videos**, **Add folder** or drag and drop to create your playlist.
 5. Choose an **Order** mode and press **Play**.
 
-This repository provides source code and example screenshots. It does not bundle OBS, Qt, FFmpeg runtime binaries or a ready-to-install download.
+The release installer includes the plugin and its FFmpeg 7 dependencies. OBS and Qt are provided by your OBS installation. The installer is unsigned. The same executable provides uninstall; close OBS before installing, updating or removing the plugin.
 
 ## Playback modes
 
@@ -109,6 +113,6 @@ In source properties, choose **Continue** or **Restart playlist** for **When sou
 
 See [Building from source](docs/BUILDING.md) and [Third-party dependencies](THIRD-PARTY-NOTICES.md).
 
-Project source: **GPL-2.0-or-later**. See [LICENSE](LICENSE) and [COPYING-NOTICE.md](COPYING-NOTICE.md).
+Project source: **GPL-2.0-or-later**. See [LICENSE](LICENSE) and [COPYING-NOTICE.md](COPYING-NOTICE.md). The combined binary package is distributed under **GPL-3.0-or-later** because of the bundled FFmpeg configuration; see [COPYING-GPLv3.txt](COPYING-GPLv3.txt).
 
 *a plugin from [DjEmiMas](https://discord.gg/dhcqZPDYh)*

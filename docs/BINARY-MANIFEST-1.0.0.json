@@ -1,0 +1,67 @@
+[
+  {
+    "file": "avcodec-61.dll",
+    "sha256": "3bc6b90bd00971a35fc7551cc8f17491ccf124258116510d3d32d08e1aea07b4",
+    "bytes": 37853696,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "avformat-61.dll",
+    "sha256": "4fce5d10771ea5d9fac265d02f7518f2697fc0bda12f8a2ca753b0ca2d55fe22",
+    "bytes": 2371584,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "avutil-59.dll",
+    "sha256": "41d13113ad2bb62d26110663e300fbc3433cf3407b70f8246ec7a4f0acc4536b",
+    "bytes": 902144,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "libcurl.dll",
+    "sha256": "e5eabea16304ebd97daafc172235db4f28e75ce4175665bf2921ddf6c2521a14",
+    "bytes": 610816,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "librist.dll",
+    "sha256": "47744cd60b82e4d1fe1349d2eb8339d7fd6cc23aeef3368c1aa38f5bb65a8283",
+    "bytes": 211456,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "libx264-164.dll",
+    "sha256": "265d645486aca27e56279d6e2481be0e2a7ad1597fd955d0d832c61a3c5207c4",
+    "bytes": 2224640,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "obs-playlist-nexus.dll",
+    "sha256": "0a48cf4a1c6c937b0467c351eecea3f50f51a734afb72f6026307cdb1df875b7",
+    "bytes": 640000
+  },
+  {
+    "file": "srt.dll",
+    "sha256": "4c0461d13130e4c7f9a550d94f3238d48126cc61fbbbf0631333cbf2c6a33eb5",
+    "bytes": 737792,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "swresample-5.dll",
+    "sha256": "c94700d5cc3efcecbd7bf1740ad094f6eb4d43514d289662b70699e557c3fae1",
+    "bytes": 124416,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "swscale-8.dll",
+    "sha256": "c9499b736cfde1c3d9325914cee3dfbae823bfb33b418080b645ce8cb1c54861",
+    "bytes": 622592,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  },
+  {
+    "file": "zlib.dll",
+    "sha256": "7bad55043a9aa2862e83d92be463ab9a8e7132ce0c9c5504790ab286d7a01958",
+    "bytes": 84992,
+    "upstreamBinaryMatch": "OBS dependency bundle 2025-07-11 windows x64"
+  }
+]
