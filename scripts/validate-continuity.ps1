@@ -29,9 +29,9 @@ try {
     $env:NEXUS_TEST_TIMEOUT='180'
     $env:PATH="$Obs33Bin;$originalPath"
     foreach($format in @('mp4','webm')) {
-        $label="example-media-$format"
+        $label="fisher3-$format"
         Write-Output "Running $label"
-        $env:NEXUS_REAL_PLAYLIST=Join-Path $projectRoot "validation\example-media-$format-selected.txt"
+        $env:NEXUS_REAL_PLAYLIST=Join-Path $projectRoot "validation\fisher3-$format-selected.txt"
         $env:NEXUS_CAPTURE_CSV=Join-Path $projectRoot "validation\$label.csv"
         & $exe $Obs33Bin $dll a b c 2>&1 | Tee-Object -FilePath (Join-Path $projectRoot "validation\$label.log")
         if($LASTEXITCODE) {throw "Failed: $label"}

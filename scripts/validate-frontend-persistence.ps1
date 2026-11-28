@@ -37,7 +37,7 @@ FPSCommon=60
 '@ | Set-Content (Join-Path $profile 'basic.ini') -Encoding UTF8
 $old=@{}
 foreach($key in @('NEXUS_FRONTEND_PHASE','NEXUS_FRONTEND_REPORT','NEXUS_FRONTEND_CLIPS')){$old[$key]=[Environment]::GetEnvironmentVariable($key,'Process')}
-$clips=@(Get-Content (Join-Path $root 'validation\example-media-mp4-selected.txt') | Select-Object -First 2)
+$clips=@(Get-Content (Join-Path $root 'validation\fisher3-mp4-selected.txt') | Select-Object -First 2)
 if($clips.Count -ne 2){throw 'Two real clips required'}
 $env:NEXUS_FRONTEND_CLIPS=$clips -join '|'
 Copy-Item (Join-Path $root 'build\RelWithDebInfo\nexus-frontend-test.dll') -Destination $helper -Force

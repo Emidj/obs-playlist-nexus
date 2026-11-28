@@ -1,7 +1,7 @@
 param(
     [Parameter(Mandatory)][string]$Obs32Bin,
     [string]$Obs33Bin='C:\Program Files\obs-studio\bin\64bit',
-    [string]$ClipFolder='C:\Media\NightCurrent',
+    [string]$ClipFolder='C:\ExampleMedia',
     [ValidateSet('windows','minimal')][string]$Platform='windows',
     [string]$Configuration='RelWithDebInfo'
 )
@@ -9,7 +9,7 @@ $ErrorActionPreference='Stop'
 $projectRoot=Split-Path $PSScriptRoot -Parent
 $build=Join-Path $projectRoot "build\$Configuration"
 $originalPath=$env:PATH
-$realList=Join-Path $projectRoot 'validation\example-media-mp4-selected.txt'
+$realList=Join-Path $projectRoot 'validation\fisher3-mp4-selected.txt'
 $real=@(Get-Content $realList)
 $reference=Join-Path $projectRoot 'validation\manager-preview-reference-full.png'
 & ffmpeg -hide_banner -loglevel error -y -i $real[2] -frames:v 1 $reference

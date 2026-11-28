@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(obs_playlist_nexus VERSION 1.0.0 LANGUAGES CXX)
+project(obs_playlist_nexus VERSION 1.0.3 LANGUAGES CXX)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 option(NEXUS_BUILD_PLUGIN "Build OBS source and FFmpeg decoder" OFF)

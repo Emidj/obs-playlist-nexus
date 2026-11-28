@@ -6,6 +6,7 @@
 
 namespace nexus {
 enum class Text {
+    ClipTransition, TransitionDuration, Cut, Dissolve, SlideLeft, SlideRight, ZoomIn,
     Accept, Cancel, Save,
     ObsSourceUnavailable, // OBS source unavailable
     LiveSourceVisibleInObs, // Live source · visible in OBS
@@ -115,6 +116,13 @@ enum class Text {
 inline const char *localized(Text key){
     // Spanish, English, French, German and Italian. English is the fallback.
     static constexpr std::array<const char *,5> catalog[]={
+        {"Transición entre vídeos","Clip transition","Transition entre vidéos","Clip-Übergang","Transizione tra video"},
+        {"Duración de la transición","Transition duration","Durée de la transition","Übergangsdauer","Durata della transizione"},
+        {"Corte directo","Cut","Coupe","Harter Schnitt","Taglio"},
+        {"Disolución","Dissolve","Fondu enchaîné","Überblenden","Dissolvenza"},
+        {"Entrada desde la izquierda","Slide in from left","Entrée par la gauche","Von links einschieben","Entrata da sinistra"},
+        {"Entrada desde la derecha","Slide in from right","Entrée par la droite","Von rechts einschieben","Entrata da destra"},
+        {"Zoom de entrada","Zoom in","Zoom entrant","Hereinzoomen","Zoom in entrata"},
         {"Aceptar","OK","Valider","OK","OK"},
         {"Cancelar","Cancel","Annuler","Abbrechen","Annulla"},
         {"Guardar","Save","Enregistrer","Speichern","Salva"},

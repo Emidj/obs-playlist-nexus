@@ -169,7 +169,7 @@ class Preview final:public QWidget {
     obs_weak_source_t *weak=nullptr;
     ManagerBackend *backend=nullptr;
     std::shared_ptr<Channel> channel;
-    std::shared_ptr<const Frame> frame;
+    PreviewFrame frame;
     bool showing=false;
     bool live=false;
     void release() {
@@ -182,12 +182,20 @@ class Preview final:public QWidget {
 protected:
     void paintEvent(QPaintEvent *) override {
         QPainter painter(this);painter.fillRect(rect(),QColor("#090b12"));
-        if(live||!frame){painter.setPen(QColor("#7b8095"));painter.drawText(rect(),Qt::AlignCenter,live?ui(Text::LiveSourceVisibleInObs):ui(Text::PreparingVideo));return;}
-        const QImage image(frame->rgba.data(),frame->width,frame->height,frame->width*4,QImage::Format_RGBA8888);
+        if(live||!frame.incoming){painter.setPen(QColor("#7b8095"));painter.drawText(rect(),Qt::AlignCenter,live?ui(Text::LiveSourceVisibleInObs):ui(Text::PreparingVideo));return;}
         const QSizeF canvas=QSizeF(1920,1080).scaled(size(),Qt::KeepAspectRatio);
-        const QSizeF fitted=QSizeF(frame->width,frame->height).scaled(canvas,Qt::KeepAspectRatio);
-        const QRectF target((width()-fitted.width())/2,(height()-fitted.height())/2,fitted.width(),fitted.height());
-        painter.setRenderHint(QPainter::SmoothPixmapTransform);painter.drawImage(target,image);
+        painter.setClipRect(QRectF((width()-canvas.width())/2,(height()-canvas.height())/2,canvas.width(),canvas.height()));
+        painter.setRenderHint(QPainter::SmoothPixmapTransform);
+        auto draw=[&](const Frame &clip,ClipMotion motion){
+            const QImage image(clip.rgba.data(),clip.width,clip.height,clip.width*4,QImage::Format_RGBA8888);
+            const QSizeF fitted=QSizeF(clip.width,clip.height).scaled(canvas,Qt::KeepAspectRatio)*motion.zoom;
+            const QRectF target((width()-fitted.width())/2+canvas.width()*motion.offset,
+                (height()-fitted.height())/2,fitted.width(),fitted.height());
+            painter.setOpacity(motion.opacity);
+            painter.drawImage(target,image);
+        };
+        if(frame.outgoing)draw(*frame.outgoing,{});
+        draw(*frame.incoming,frame.motion);
     }
     void showEvent(QShowEvent *event) override {
         QWidget::showEvent(event);
@@ -205,7 +213,9 @@ public:
     void refreshFrame() {
         if(auto *source=obs_weak_source_get_source(weak)) {
             auto latest=backend->preview_frame();obs_source_release(source);
-            if(latest!=frame){frame=std::move(latest);if(isVisible())update();}
+            const bool changed=latest.incoming!=frame.incoming||latest.outgoing||frame.outgoing;
+            frame=std::move(latest);
+            if(changed&&isVisible())update();
         }
     }
     void setLive(bool value){if(live!=value){live=value;update();}}

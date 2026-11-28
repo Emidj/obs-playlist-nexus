@@ -1,4 +1,4 @@
-param([string]$Package='',[string]$OutputName='OBS-Playlist-NEXUS-1.0.0-Setup-x64.exe')
+param([string]$Package='',[string]$OutputName='OBS-Playlist-NEXUS-1.0.3-Setup-x64.exe')
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent
 if(!$Package){$Package=(Get-ChildItem (Join-Path $root 'dist') -Filter '*.zip' | Sort-Object LastWriteTime -Descending | Select-Object -First 1).FullName}

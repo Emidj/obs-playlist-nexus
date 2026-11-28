@@ -1,0 +1,61 @@
+{
+  "version": "1.0.3",
+  "architecture": "Windows x64",
+  "files": [
+    {
+      "file": "obs-plugins/64bit/obs-playlist-nexus.dll",
+      "sha256": "5FABAED57980B3281AF87F8D89AEC99CD33F36B254556919D1CA8F89E0BF1C5E",
+      "bytes": 500736
+    },
+    {
+      "file": "obs-plugins/64bit/avcodec-61.dll",
+      "sha256": "3BC6B90BD00971A35FC7551CC8F17491CCF124258116510D3D32D08E1AEA07B4",
+      "bytes": 37853696
+    },
+    {
+      "file": "obs-plugins/64bit/avformat-61.dll",
+      "sha256": "4FCE5D10771EA5D9FAC265D02F7518F2697FC0BDA12F8A2CA753B0CA2D55FE22",
+      "bytes": 2371584
+    },
+    {
+      "file": "obs-plugins/64bit/avutil-59.dll",
+      "sha256": "41D13113AD2BB62D26110663E300FBC3433CF3407B70F8246EC7A4F0ACC4536B",
+      "bytes": 902144
+    },
+    {
+      "file": "obs-plugins/64bit/swscale-8.dll",
+      "sha256": "C9499B736CFDE1C3D9325914CEE3DFBAE823BFB33B418080B645CE8CB1C54861",
+      "bytes": 622592
+    },
+    {
+      "file": "obs-plugins/64bit/swresample-5.dll",
+      "sha256": "C94700D5CC3EFCECBD7BF1740AD094F6EB4D43514D289662B70699E557C3FAE1",
+      "bytes": 124416
+    },
+    {
+      "file": "obs-plugins/64bit/libx264-164.dll",
+      "sha256": "265D645486ACA27E56279D6E2481BE0E2A7AD1597FD955D0D832C61A3C5207C4",
+      "bytes": 2224640
+    },
+    {
+      "file": "obs-plugins/64bit/zlib.dll",
+      "sha256": "7BAD55043A9AA2862E83D92BE463AB9A8E7132CE0C9C5504790AB286D7A01958",
+      "bytes": 84992
+    },
+    {
+      "file": "obs-plugins/64bit/librist.dll",
+      "sha256": "47744CD60B82E4D1FE1349D2EB8339D7FD6CC23AEEF3368C1AA38F5BB65A8283",
+      "bytes": 211456
+    },
+    {
+      "file": "obs-plugins/64bit/srt.dll",
+      "sha256": "4C0461D13130E4C7F9A550D94F3238D48126CC61FBBBF0631333CBF2C6A33EB5",
+      "bytes": 737792
+    },
+    {
+      "file": "obs-plugins/64bit/libcurl.dll",
+      "sha256": "E5EABEA16304EBD97DAAFC172235DB4F28E75CE4175665BF2921DDF6C2521A14",
+      "bytes": 610816
+    }
+  ]
+}

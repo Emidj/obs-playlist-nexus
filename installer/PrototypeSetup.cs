@@ -14,11 +14,11 @@ using System.Windows.Forms;
 
 [assembly: AssemblyTitle("OBS Playlist NEXUS Setup")]
 [assembly: AssemblyProduct("OBS Playlist NEXUS")]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.3.0")]
+[assembly: AssemblyFileVersion("1.0.3.0")]
 
 public class OwnedFile { public string path; public string sha256; }
-public class InstallState { public string product="OBS Playlist NEXUS"; public string version="1.0.0"; public List<OwnedFile> files=new List<OwnedFile>(); }
+public class InstallState { public string product="OBS Playlist NEXUS"; public string version="1.0.3"; public List<OwnedFile> files=new List<OwnedFile>(); }
 public static class PrototypeSetup {
     static readonly JavaScriptSerializer Json=new JavaScriptSerializer();
     const string StatePath="obs-plugins/64bit/nexus-playlist-install.json";
@@ -142,7 +142,7 @@ public static class PrototypeSetup {
         Application.EnableVisualStyles();
         var background=Color.FromArgb(25,29,38);
         var muted=Color.FromArgb(165,174,193);
-        using(var form=new Form {Text="OBS Playlist NEXUS 1.0",ClientSize=new Size(960,540),
+        using(var form=new Form {Text="OBS Playlist NEXUS 1.0.3",ClientSize=new Size(960,540),
             StartPosition=FormStartPosition.CenterScreen,FormBorderStyle=FormBorderStyle.FixedDialog,
             MaximizeBox=false,BackColor=background,ForeColor=Color.White,Font=new Font("Segoe UI",10),AutoScaleMode=AutoScaleMode.Dpi}) {
             using(var stream=Assembly.GetExecutingAssembly().GetManifestResourceStream("nexus-icon.ico"))
@@ -152,7 +152,7 @@ public static class PrototypeSetup {
                 if(stream!=null)using(var original=Image.FromStream(stream))branding.Image=new Bitmap(original);
             form.FormClosed+=delegate {if(branding.Image!=null)branding.Image.Dispose();};
 
-            var header=new Label {Text="OBS PLAYLIST NEXUS  /  1.0",Left=390,Top=32,Width=360,Height=26,ForeColor=muted};
+            var header=new Label {Text="OBS PLAYLIST NEXUS  /  1.0.3",Left=390,Top=32,Width=360,Height=26,ForeColor=muted};
             var language=new ComboBox {Left=774,Top=28,Width=150,DropDownStyle=ComboBoxStyle.DropDownList,
                 ForeColor=SystemColors.WindowText,BackColor=SystemColors.Window};
             language.Items.AddRange(new object[]{"English","Español","Italiano","Français","Deutsch"});

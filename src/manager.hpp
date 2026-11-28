@@ -5,8 +5,21 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <algorithm>
 namespace nexus {
 struct Frame;
+struct ClipMotion {
+    float offset=0, zoom=1, opacity=1;
+};
+inline ClipMotion clip_motion(int kind,float progress) {
+    const float p=std::clamp(progress,0.0f,1.0f);
+    const float t=p*p*(3-2*p);
+    return {kind==2?-(1-t):kind==3?1-t:0,kind==4?0.65f+0.35f*t:1,kind==1?t:1};
+}
+struct PreviewFrame {
+    std::shared_ptr<const Frame> incoming,outgoing;
+    ClipMotion motion;
+};
 struct GroupState {
     int by=0;
     std::string separator="_";
@@ -34,7 +47,7 @@ struct ManagerSink {
 struct ManagerBackend {
     virtual ~ManagerBackend()=default;
     virtual ManagerState snapshot()=0;
-    virtual std::shared_ptr<const Frame> preview_frame()=0;
+    virtual PreviewFrame preview_frame()=0;
     virtual void subscribe(std::shared_ptr<ManagerSink>)=0;
     virtual void unsubscribe(ManagerSink *)=0;
     virtual void navigate(int direction)=0;

@@ -41,6 +41,21 @@ struct Source : nexus::ManagerBackend {
     std::atomic<bool> has_files{false};
     std::shared_ptr<const std::vector<std::string>> files_view=std::make_shared<const std::vector<std::string>>();
     gs_texture_t *texture = nullptr;
+    struct ClipTransition {
+        std::shared_ptr<nexus::Frame> outgoing;
+        std::shared_ptr<nexus::LiveEntry> outgoing_live;
+        int kind;
+        int64_t duration;
+    };
+    int transition_kind=0;
+    int64_t transition_duration=400000000;
+    std::atomic<std::shared_ptr<ClipTransition>> clip_transition;
+    std::atomic<int64_t> transition_elapsed{0};
+    gs_texture_t *outgoing_texture=nullptr;
+    gs_texrender_t *outgoing_live_target=nullptr,*incoming_live_target=nullptr;
+    gs_effect_t *fade_effect=nullptr;
+    bool fade_initialized=false;
+    std::weak_ptr<ClipTransition> uploaded_transition;
     size_t consecutive_errors = 0;
     bool exhausted = false;
     std::vector<obs_hotkey_id> hotkeys;
@@ -92,7 +107,13 @@ struct Source : nexus::ManagerBackend {
         lock.unlock(); state.files=*view;state.groups=*group_view;
         return state;
     }
-    std::shared_ptr<const nexus::Frame> preview_frame() override {return displayed.load();}
+    nexus::PreviewFrame preview_frame() override {
+        auto transition=clip_transition.load();
+        auto incoming=displayed.load();
+        if(!transition||!transition->outgoing||live_output.load())return {incoming,{},{}};
+        const float progress=float(transition_elapsed.load())/transition->duration;
+        return {incoming,transition->outgoing,nexus::clip_motion(transition->kind,progress)};
+    }
     void subscribe(std::shared_ptr<nexus::ManagerSink> value) override {
         std::lock_guard<std::mutex> lock(control); sink=std::move(value); last_ui.reset(); publish_locked();
     }
@@ -146,6 +167,16 @@ struct Source : nexus::ManagerBackend {
             history.push_back(current_path);
         }
         const auto incoming=prepared_path;
+        auto outgoing=displayed.load();
+        auto outgoing_live=live_output.load();
+        clip_transition.store({});
+        if(transition_kind&&(outgoing_live||(!nexus::is_live(current_path)&&outgoing))&&
+            (sample.frame||live_slots[1-active])&&
+            !(paused||(hidden&&pause_hidden))&&incoming!=current_path){
+            transition_elapsed=0;
+            clip_transition.store(std::make_shared<ClipTransition>(ClipTransition{
+                outgoing_live?nullptr:outgoing,outgoing_live,transition_kind,transition_duration}));
+        }
         if(manual) {
             timeline.origin=now; timeline.paused_at=(paused||(hidden&&pause_hidden))?now:-1;
             timeline.stalled=false; ++timeline.transitions;
@@ -201,6 +232,8 @@ struct Source : nexus::ManagerBackend {
         auto view=std::make_shared<const std::vector<std::string>>(incoming);
         std::lock_guard<std::mutex> lock(control);
         paused = obs_data_get_bool(settings, "paused");
+        transition_kind=int(std::clamp(obs_data_get_int(settings,"transition_kind"),0LL,4LL));
+        transition_duration=std::clamp(obs_data_get_int(settings,"transition_ms"),50LL,2000LL)*1000000;
         pause_hidden=obs_data_get_int(settings,"hide_policy")==0;
         restart_show=obs_data_get_int(settings,"show_policy")==1;
         const bool new_random = obs_data_get_bool(settings, "random");
@@ -212,6 +245,7 @@ struct Source : nexus::ManagerBackend {
         files_view=std::move(view); has_files=!files.empty();
         consecutive_errors = 0; exhausted = false; last_error.clear(); ++revision;
         if(files.empty()) {
+            clip_transition.store({});
             current_path.clear(); prepared_path.clear(); manual_target.clear(); history.clear();
             live_output.store({});request_locked(0,"");request_locked(1,"");timeline.reset();displayed.store({});
             publish_locked(); return;
@@ -244,6 +278,12 @@ struct Source : nexus::ManagerBackend {
         }
         if (paused || (hidden&&pause_hidden)) { timeline.pause(now); publish_locked(); return; }
         timeline.resume(now);
+        if(auto transition=clip_transition.load()){
+            const auto elapsed=timeline.local(now);
+            transition_elapsed=elapsed;
+            if(elapsed>=transition->duration)clip_transition.store({});
+            if(sink)sink->frame_changed();
+        }
         auto current = sample_locked(active,current_path,timeline.presentation(now),now);
         if(nexus::is_live(current_path)&&current.ready){
             timeline.start(now);
@@ -289,27 +329,72 @@ struct Source : nexus::ManagerBackend {
         if (timeline.origin < 0) timeline.start(now);
         commit_locked(std::move(standby),now,false,current.end);
     }
+    void draw_clip(gs_texture_t *image,float offset=0,float zoom=1,float opacity=1) {
+        const auto width=gs_texture_get_width(image),height=gs_texture_get_height(image);
+        const float scale=std::min(1920.0f/width,1080.0f/height)*zoom;
+        const float left=(1920-width*scale)/2+offset,top=(1080-height*scale)/2;
+        const auto first=uint32_t(std::clamp(std::ceil(-left/scale),0.0f,float(width)));
+        const auto end=uint32_t(std::clamp(std::floor((1920-left)/scale),0.0f,float(width)));
+        if(end<=first)return;
+        auto *effect=opacity<1?fade_effect:obs_get_base_effect(OBS_EFFECT_DEFAULT);
+        if(!effect)return;
+        gs_matrix_push();
+        gs_matrix_translate3f(left+first*scale,top,0);
+        gs_matrix_scale3f(scale,scale,1);
+        gs_effect_set_texture(gs_effect_get_param_by_name(effect,"image"),image);
+        if(opacity<1){
+            gs_effect_set_float(gs_effect_get_param_by_name(effect,"opacity"),opacity);
+            gs_blend_state_push();
+            gs_enable_blending(true);
+            gs_blend_function(GS_BLEND_SRCALPHA,GS_BLEND_INVSRCALPHA);
+        }
+        while(gs_effect_loop(effect,"Draw"))gs_draw_sprite_subregion(image,0,first,0,end-first,height);
+        if(opacity<1)gs_blend_state_pop();
+        gs_matrix_pop();
+    }
+    bool draw_live(const std::shared_ptr<nexus::LiveEntry> &entry) {
+        auto source=entry->source();
+        if(!source||obs_source_removed(source.get()))return false;
+        const auto width=obs_source_get_width(source.get()),height=obs_source_get_height(source.get());
+        if(!width||!height)return false;
+        const float scale=std::min(1920.0f/width,1080.0f/height);
+        rendering_live=true;
+        gs_matrix_push();
+        gs_matrix_translate3f((1920.0f-width*scale)/2,(1080.0f-height*scale)/2,0);
+        gs_matrix_scale3f(scale,scale,1);
+        obs_source_video_render(source.get());
+        gs_matrix_pop();
+        rendering_live=false;
+        return true;
+    }
+    gs_texture_t *capture_live(const std::shared_ptr<nexus::LiveEntry> &entry,gs_texrender_t *&target) {
+        if(!target)target=gs_texrender_create(GS_RGBA,GS_ZS_NONE);
+        if(!target)return nullptr;
+        gs_texrender_reset(target);
+        if(!gs_texrender_begin(target,1920,1080))return nullptr;
+        struct vec4 transparent{};
+        gs_clear(GS_CLEAR_COLOR,&transparent,0,0);
+        gs_ortho(0,1920,0,1080,-100,100);
+        gs_matrix_identity();
+        gs_blend_state_push();
+        gs_reset_blend_state();
+        const bool drawn=draw_live(entry);
+        gs_blend_state_pop();
+        gs_texrender_end(target);
+        return drawn?gs_texrender_get_texture(target):nullptr;
+    }
     void render() {
         // Immutable frame handoff: drawing never takes the manager/control lock.
         if(!has_files.load()) {gs_texture_destroy(texture);texture=nullptr;uploaded.reset();return;}
         if(rendering_live)return;
-        if(auto live=live_output.load()){
-            auto source=live->source();
-            if(source&&!obs_source_removed(source.get())){
-                const auto width=obs_source_get_width(source.get()),height=obs_source_get_height(source.get());
-                if(width&&height){
-                    const float scale=std::min(1920.0f/width,1080.0f/height);
-                    rendering_live=true;
-                    gs_matrix_push();
-                    gs_matrix_translate3f((1920.0f-width*scale)/2,(1080.0f-height*scale)/2,0);
-                    gs_matrix_scale3f(scale,scale,1);
-                    obs_source_video_render(source.get());
-                    gs_matrix_pop();
-                    rendering_live=false;
-                    return;
-                }
-            }
+        auto transition=clip_transition.load();
+        if(!transition&&outgoing_texture){
+            gs_texture_destroy(outgoing_texture);
+            outgoing_texture=nullptr;
+            uploaded_transition.reset();
         }
+        auto live=live_output.load();
+        if(live&&!transition&&draw_live(live))return;
         auto frame=displayed.load();
         if (frame && frame != uploaded) {
             if (texture && (gs_texture_get_width(texture) != uint32_t(frame->width) || gs_texture_get_height(texture) != uint32_t(frame->height))) {
@@ -323,7 +408,41 @@ struct Source : nexus::ManagerBackend {
                 uploaded = frame;
             }
         }
-        if (!texture) return;
+        if(transition){
+            if(transition->outgoing&&uploaded_transition.lock()!=transition){
+                gs_texture_destroy(outgoing_texture);
+                const auto &old_frame=*transition->outgoing;
+                const uint8_t *pixels=old_frame.rgba.data();
+                outgoing_texture=gs_texture_create(old_frame.width,old_frame.height,GS_RGBA,1,&pixels,0);
+                uploaded_transition=transition;
+            }
+            if(transition->kind==1&&!fade_initialized){
+                fade_initialized=true;
+                fade_effect=gs_effect_create(R"(
+                    uniform float4x4 ViewProj;
+                    uniform texture2d image;
+                    uniform float opacity;
+                    sampler_state linearSampler { Filter=Linear; AddressU=Clamp; AddressV=Clamp; };
+                    struct Vertex { float4 pos : POSITION; float2 uv : TEXCOORD0; };
+                    Vertex VS(Vertex v) { v.pos=mul(float4(v.pos.xyz,1.0),ViewProj); return v; }
+                    float4 PS(Vertex v) : TARGET { float4 c=image.Sample(linearSampler,v.uv); return float4(c.rgb,c.a*opacity); }
+                    technique Draw { pass { vertex_shader=VS(v); pixel_shader=PS(v); } }
+                )","nexus-clip-dissolve",nullptr);
+            }
+            auto *old_image=transition->outgoing_live?capture_live(transition->outgoing_live,outgoing_live_target):outgoing_texture;
+            auto *new_image=live?capture_live(live,incoming_live_target):texture;
+            if(old_image&&new_image&&(transition->kind!=1||fade_effect)){
+                const float progress=std::clamp(float(transition_elapsed.load())/transition->duration,0.0f,1.0f);
+                if(progress<1){
+                    draw_clip(old_image);
+                    const auto motion=nexus::clip_motion(transition->kind,progress);
+                    draw_clip(new_image,1920*motion.offset,motion.zoom,motion.opacity);
+                    return;
+                }
+            }
+        }
+        if(live&&draw_live(live))return;
+        if(!texture)return;
         const float scale = std::min(1920.0f / gs_texture_get_width(texture), 1080.0f / gs_texture_get_height(texture));
         const float w = gs_texture_get_width(texture)*scale, h = gs_texture_get_height(texture)*scale;
         gs_matrix_push(); gs_matrix_translate3f((1920-w)/2, (1080-h)/2, 0);
@@ -338,7 +457,7 @@ struct Source : nexus::ManagerBackend {
         for(auto id:hotkeys) obs_hotkey_unregister(id);
         for(auto &decoder:decoders) decoder.stop();
         if(sink) sink->closed();
-        obs_enter_graphics(); gs_texture_destroy(texture); obs_leave_graphics();
+        obs_enter_graphics(); gs_texture_destroy(texture); gs_texture_destroy(outgoing_texture); gs_effect_destroy(fade_effect); gs_texrender_destroy(outgoing_live_target); gs_texrender_destroy(incoming_live_target); obs_leave_graphics();
     }
 };
 const char *name(void *) { return nexus::localized(nexus::Text::ObsPlaylistNexus); }
@@ -363,6 +482,14 @@ obs_properties_t *properties(void *data) {
     obs_property_list_add_int(show,nexus::localized(nexus::Text::Continue),0); obs_property_list_add_int(show,nexus::localized(nexus::Text::RestartPlaylist),1);
     auto *hide=obs_properties_add_list(p,"hide_policy",nexus::localized(nexus::Text::WhenSourceBecomesHidden),OBS_COMBO_TYPE_LIST,OBS_COMBO_FORMAT_INT);
     obs_property_list_add_int(hide,nexus::localized(nexus::Text::Pause2),0); obs_property_list_add_int(hide,nexus::localized(nexus::Text::Continue),1);
+    using nexus::Text;
+    using nexus::localized;
+    auto *transition=obs_properties_add_list(p,"transition_kind",localized(Text::ClipTransition),OBS_COMBO_TYPE_LIST,OBS_COMBO_FORMAT_INT);
+    int kind=0;
+    for(auto label:{Text::Cut,Text::Dissolve,Text::SlideLeft,Text::SlideRight,Text::ZoomIn})
+        obs_property_list_add_int(transition,localized(label),kind++);
+    auto *duration=obs_properties_add_int_slider(p,"transition_ms",localized(Text::TransitionDuration),50,2000,50);
+    obs_property_int_set_suffix(duration," ms");
     return p;
 }
 }
@@ -376,6 +503,7 @@ bool obs_module_load(void) {
     info.get_width = [](void *) -> uint32_t { return 1920; };
     info.get_height = [](void *) -> uint32_t { return 1080; };
     info.get_properties = properties;
+    info.get_defaults=[](obs_data_t *settings){obs_data_set_default_int(settings,"transition_ms",400);};
     info.update = [](void *p, obs_data_t *s) {
         auto *v = static_cast<Source *>(p); v->configure(s);
     };

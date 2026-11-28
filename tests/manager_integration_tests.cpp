@@ -283,6 +283,11 @@ int main(int argc,char **argv) {
             open(source);
         }
         files(source,{real[0]});pump(100);
+        auto *transition_settings=obs_source_get_settings(source);
+        obs_data_set_int(transition_settings,"transition_kind",1);
+        obs_data_set_int(transition_settings,"transition_ms",400);
+        obs_source_update(source,transition_settings);
+        obs_data_release(transition_settings);
         bool picker_ok=false;
         QTimer::singleShot(0,qApp,[&]{
             for(auto *widget:QApplication::topLevelWidgets())if(auto *picker=widget->findChild<QComboBox *>("liveSourceCombo")){

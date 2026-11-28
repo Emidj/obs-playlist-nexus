@@ -1,7 +1,7 @@
 param(
     [ValidateRange(60,86400)][int]$Seconds=7200,
     [string]$ObsBin='C:\Program Files\obs-studio\bin\64bit',
-    [string]$MediaFolder='C:\Media\NightCurrent\Webm'
+    [string]$MediaFolder='C:\ExampleMedia\Webm'
 )
 $ErrorActionPreference='Stop'
 $root=Split-Path $PSScriptRoot -Parent

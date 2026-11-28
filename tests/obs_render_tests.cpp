@@ -21,6 +21,7 @@ struct Probe {
 static Probe probe;
 static ContinuityProbe identity;
 static bool real_media=false;
+static std::atomic<unsigned> mixed_dissolve_frames{0};
 static std::ofstream real_trace;
 static std::ofstream recording;
 static uint64_t previous_hash=0, repeated=0, longest_repeat=0;
@@ -65,6 +66,7 @@ static void capture(void *, video_data *frame) {
         return;
     }
     const auto *pixel = frame->data[0] + 540*frame->linesize[0] + 960*4;
+    if((pixel[0]>35)+(pixel[1]>35)+(pixel[2]>35)==2)++mixed_dissolve_frames;
     const bool black = int(pixel[0])+int(pixel[1])+int(pixel[2]) < 50;
     if (!black) probe.started = true;
     if (!probe.started) return; // Initial source preparation is measured separately.
@@ -109,6 +111,10 @@ int main(int argc, char **argv) {
         std::cerr << "module load failed\n"; obs_shutdown(); return 5;
     }
     auto *settings = obs_data_create(); auto *files = obs_data_array_create();
+    if(const auto *kind=std::getenv("NEXUS_TEST_CLIP_TRANSITION")){
+        obs_data_set_int(settings,"transition_kind",std::atoi(kind));
+        obs_data_set_int(settings,"transition_ms",400);
+    }
     balanced_test=std::getenv("NEXUS_BALANCED_TEST")!=nullptr;
     for (const auto &file : paths) {
         auto *item = obs_data_create();
@@ -194,5 +200,10 @@ int main(int argc, char **argv) {
         <<" peak_commit_mib="<<memory.PeakPagefileUsage/(1024.*1024.)<<std::endl;
     std::cout<<"obs_average_frame_ms="<<obs_get_average_frame_time_ns()/1e6
         <<" obs_total_frames="<<obs_get_total_frames()<<" obs_lagged_frames="<<obs_get_lagged_frames()<<std::endl;
+    if(const auto *kind=std::getenv("NEXUS_TEST_CLIP_TRANSITION");
+        kind&&std::atoi(kind)==1&&!real_media&&identity.fixtures.empty()){
+        std::cout<<"mixed_dissolve_frames="<<mixed_dissolve_frames<<std::endl;
+        pass=pass&&mixed_dissolve_frames>=3;
+    }
     obs_shutdown(); return pass ? 0 : 1;
 }

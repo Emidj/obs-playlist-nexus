@@ -4,13 +4,14 @@
 
 A native video playlist source for OBS Studio on Windows x64. Build a continuous rotation of local videos, organize content into categories, and bring existing OBS sources or scenes into the same playlist.
 
-**Version 1.0.0 · Windows x64 · OBS Studio 32 / 33 · Video only**
+**Version 1.0.3 · Windows x64 · OBS Studio 32 / 33 · Video only**
 
 ![Playlist Manager playing the fictional Night Current rotation](docs/images/playlist-manager.png)
 
 ## Features
 
 - **Continuous playback:** the next local video is prepared while the current one plays.
+- **Clip transitions:** Cut, Dissolve, Slide in from left, Slide in from right and Zoom in, with a 50–2000 ms duration.
 - **Three playback modes:** Sequential, Shuffle and Balanced group shuffle.
 - **Category quotas:** choose how many entries each category contributes per round.
 - **Flexible organization:** group by filename prefix, parent folder or manual assignment, or use one ungrouped pool.
@@ -24,7 +25,7 @@ A native video playlist source for OBS Studio on Windows x64. Build a continuous
 
 ## Download
 
-Get the [official 1.0.0 release](https://github.com/Emidj/obs-playlist-nexus/releases/tag/v1.0.0). Download **Windows-x64-Installer.zip**, extract it, close OBS and run the included Setup executable. Licenses and corresponding source downloads are provided with the release.
+Get the [official 1.0.3 release](https://github.com/Emidj/obs-playlist-nexus/releases/tag/v1.0.3). Download **Windows-x64-Installer.zip**, extract it, close OBS and run the included Setup executable. Licenses and corresponding source downloads are provided with the release.
 
 ## Quick start
 
@@ -35,6 +36,12 @@ Get the [official 1.0.0 release](https://github.com/Emidj/obs-playlist-nexus/rel
 5. Choose an **Order** mode and press **Play**.
 
 The release installer includes the plugin and its FFmpeg 7 dependencies. OBS and Qt are provided by your OBS installation. The installer is unsigned. The same executable provides uninstall; close OBS before installing, updating or removing the plugin.
+
+## New in 1.0.3
+
+Choose **Clip transition** and **Transition duration** in the source properties. Cut remains the default; animated transitions use 400 ms by default, adjustable from 50 to 2000 ms. Transitions work between local videos and OBS source/scene entries. The outgoing local video holds its last frame during the transition. The Playlist Manager mirrors transitions between local videos; live entries remain identified as live in its preview.
+
+This update also clips sliding video to the source canvas and preserves rendering state when capturing live OBS entries for transitions. Existing playlists keep their settings. See [the changelog](CHANGELOG.md).
 
 ## Playback modes
 

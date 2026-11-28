@@ -1,4 +1,4 @@
-# Third-party dependencies in release 1.0.0
+# Third-party dependencies in release 1.0.3
 
 The installer bundles the production Playlist NEXUS DLL and unmodified runtime DLLs from the official OBS dependency bundle **2025-07-11, Windows x64**. All ten third-party DLLs were matched byte-for-byte against that bundle. The release includes a binary SHA-256 manifest, complete dependency notices and a dependency source archive with upstream sources, pinned revisions, build recipes and Windows patches.
 
@@ -19,7 +19,7 @@ Additional statically linked codec/crypto dependencies are supplied in the depen
 
 ## Source downloads
 
-The [same release page](https://github.com/Emidj/obs-playlist-nexus/releases/tag/v1.0.0) provides:
+The [same release page](https://github.com/Emidj/obs-playlist-nexus/releases/tag/v1.0.3) provides:
 
 - **Sources.zip**: Playlist NEXUS source, installer source and build instructions.
 - **Dependency-Sources.zip**: upstream dependency source archives and the complete OBS build recipes and patches. See its README and source-manifest.json for extraction and revision details.
